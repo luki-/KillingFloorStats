@@ -1,10 +1,3 @@
-Copyright (C) 2012, Luki
-http://luki.net.pl | luki at luki.net.pl
-Original layout by [PixelDuck](http://nyssa.me), a member of [Sykosis](http://sykosis.co.uk) clan, modified by [Luki](http://luki.net.pl).
-
-This script is distributed under the GNU General Public License version 3.
-Please do not remove link to the original author's website and above informations about author/contributors.
-
 # Installation
 ## Server Requirements
   * PHP 5 with *cURL* extension
@@ -21,6 +14,9 @@ CREATE TABLE kfstats_cache (
 
 ## Setup
 Open kf.php and read the comments ;)
+
+# Credits
+Layout was prepared by [PixelDuck](http://nyssa.me).
 
 # Support
 If you want to consider donation, please visit [this site](http://luki.net.pl/donate.html).

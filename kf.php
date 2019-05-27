@@ -1,12 +1,4 @@
-<?PHP
-/*  Copyright (C) 2012, Luki
- *  http://luki.net.pl | luki@luki.net.pl
- *  Original layout by PixelDuck (http://nyssa.me), a member of Sykosis clan (http://sykosis.co.uk), modified by Luki
- *  
- *  This script is distributed under the GNU General Public License version 3.
- *  Please do not remove link to the original author's website and above informations about author/contributors.
- */
- 
+<?PHP 
 //------ CONFIGURATION AREA ------\\
 	DEFINE('KFStats', 'http://steamcommunity.com/profiles/%s/statsfeed/1250/?schema=1');
 	
@@ -299,17 +291,17 @@
 	function getAchievements($players) {
 		global $cache_time;
 		
-		$db = @mysql_connect(db_host, db_user, db_pass);
+		$db = @mysqli_connect(db_host, db_user, db_pass);
 		if ($db)
-			mysql_select_db(db_name, $db);
+			mysqli_select_db($db, db_name);
 	
 		$mc = curl_multi_init();
 		
 		foreach ($players as &$p) {
 			if ($db) {
-				$q = mysql_query("SELECT `lastupdate`, `data_stats` FROM `" . db_table . "` WHERE `id` = '" . mysql_real_escape_string($p['id'], $db) . "' LIMIT 1", $db);
-				if ($q && (mysql_num_rows($q) != 0)) {
-					$q = mysql_fetch_array($q, MYSQL_ASSOC);
+				$q = mysqli_query($db, "SELECT `lastupdate`, `data_stats` FROM `" . db_table . "` WHERE `id` = '" . mysqli_real_escape_string($db, $p['id']) . "' LIMIT 1");
+				if ($q && (mysqli_num_rows($q) != 0)) {
+					$q = mysqli_fetch_array($q, MYSQLI_ASSOC);
 					$p['data_stats'] = $q['data_stats'];
 					if ((time() - $q['lastupdate']) <= $cache_time)
 						//if(!isset($_GET['forceupdate']))
@@ -338,11 +330,11 @@
 				if (($ci_stats['http_code'] == 200) && ($ci_stats['size_download'] > 1024)) {
 					$p['data_stats'] = curl_multi_getcontent($p['handle_stats']);
 					if ($db)
-						$q = mysql_query("REPLACE INTO `" . db_table . "` (`id`, `lastupdate`, `data_stats`) VALUES ('" . mysql_real_escape_string($p['id'], $db) . "', UNIX_TIMESTAMP(), '" . mysql_real_escape_string($p['data_stats'], $db) . "');", $db);
+						$q = mysqli_query($db, "REPLACE INTO `" . db_table . "` (`id`, `lastupdate`, `data_stats`) VALUES ('" . mysqli_real_escape_string($db, $p['id']) . "', UNIX_TIMESTAMP(), '" . mysqli_real_escape_string($db, $p['data_stats']) . "');");
 				} else
 					$p['profile_private'] = true;
-				curl_close($p['handle_stats']);
 				curl_multi_remove_handle($mc, $p['handle_stats']);
+				curl_close($p['handle_stats']);
 				unset($p['handle_stats']);
 			}
 			
